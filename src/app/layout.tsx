@@ -4,13 +4,11 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '../theme';
 import type { Metadata } from "next";
 import "./globals.css";
+import Header from '@/components/Header/Header';
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
 
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto',
-});
 
 export const metadata: Metadata = {
     title: "CropIQ",
@@ -23,13 +21,16 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.variable}>
-        <body
-            className={`antialiased`}
-        >
+    <html lang="en" suppressHydrationWarning>
+        <body className={`antialiased`}>
+            <InitColorSchemeScript attribute="class"/>
             <AppRouterCacheProvider>
                 <ThemeProvider theme={theme}>
-                    {children}
+                    <CssBaseline />
+                    <Header/>
+                    <Box sx={{ mt: { xs: 7, sm: 8 } }}>
+                        {children}
+                    </Box>
                 </ThemeProvider>
             </AppRouterCacheProvider>
         </body>
