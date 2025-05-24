@@ -1,14 +1,11 @@
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { Roboto } from 'next/font/google';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from '../theme';
-import type { Metadata } from "next";
 import "./globals.css";
+import theme from '../theme';
 import Header from '@/components/Header/Header';
-import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { ThemeProvider } from '@mui/material/styles';
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "CropIQ",
@@ -22,15 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-        <body className={`antialiased`}>
+        <body className={`antialiased`} suppressHydrationWarning>
             <InitColorSchemeScript attribute="class"/>
-            <AppRouterCacheProvider>
+            <AppRouterCacheProvider options={{ enableCssLayer: true }}>
                 <ThemeProvider theme={theme}>
-                    <CssBaseline />
+                    <CssBaseline/>
                     <Header/>
-                    <Box sx={{ mt: { xs: 7, sm: 8 } }}>
-                        {children}
-                    </Box>
+                    {children}
                 </ThemeProvider>
             </AppRouterCacheProvider>
         </body>

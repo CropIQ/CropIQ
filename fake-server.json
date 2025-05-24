@@ -1,6 +1,301 @@
 {
   "users": [
-    { "id": 1, "name": "John Doe" },
-    { "id": 2, "name": "Jane Smith" }
+    {
+      "id": "1",
+      "role": "worker",
+      "name": "John Doe",
+      "email": "john.doe@gmail.com",
+      "password": "hashed_pw_1",
+      "contactInfo": "555-1234"
+    },
+    {
+      "id": "2",
+      "role": "worker",
+      "name": "Jane Smith",
+      "email": "jane.smith@gmail.com",
+      "password": "hashed_pw_2",
+      "contactInfo": "555-5678"
+    },
+    {
+      "id": "3",
+      "role": "worker",
+      "name": "Rokas Rootas",
+      "email": "rokas@gmail.com",
+      "password": "hashed_pw_3",
+      "contactInfo": "555-0000"
+    }
+  ],
+  "workers": [
+    {
+      "id": "1",
+      "userId": 1,
+      "role": "farmer"
+    },
+    {
+      "id": "2",
+      "userId": 2,
+      "role": "worker"
+    },
+    {
+      "id": "3",
+      "userId": 3,
+      "role": "worker"
+    }
+  ],
+  "animalgroups": [
+    {
+      "id": "1",
+      "farmId": 1,
+      "name": "Mammals"
+    },
+    {
+      "id": "2",
+      "farmId": 2,
+      "name": "Birds"
+    },
+    {
+      "id": "3",
+      "farmId": 2,
+      "name": "Reptiles"
+    }
+  ],
+  "farms": [
+    {
+      "id": "1",
+      "usersCount": 2,
+      "name": "Green Valley Farm"
+    },
+    {
+      "id": "2",
+      "usersCount": 1,
+      "name": "Sunny Acres"
+    },
+    {
+      "id": "13aa"
+    },
+    {
+      "id": "84aa"
+    },
+    {
+      "id": "dd3b"
+    },
+    {
+      "id": "c571"
+    }
+  ],
+  "linkedfarms": [
+    {
+      "id": "1",
+      "userId": 1,
+      "farmId": 1
+    },
+    {
+      "id": "2",
+      "userId": 2,
+      "farmId": 1
+    },
+    {
+      "id": "3",
+      "userId": 3,
+      "farmId": 2
+    }
+  ],
+  "animals": [
+    {
+      "id": "1",
+      "animalGroupId": 1,
+      "name": "Bessie",
+      "breed": "Holstein",
+      "birthDateTime": "2021-03-01T10:00:00Z",
+      "weight": 600
+    },
+    {
+      "id": "2",
+      "animalGroupId": 2,
+      "name": "Clucky",
+      "breed": "Leghorn",
+      "birthDateTime": "2022-05-10T08:00:00Z",
+      "weight": 2
+    },
+    {
+      "id": "3",
+      "animalGroupId": 3,
+      "name": "Slinky",
+      "breed": "Corn Snake",
+      "birthDateTime": "2023-01-15T12:00:00Z",
+      "weight": 1
+    }
+  ],
+  "medicaments": [
+    {
+      "id": "1",
+      "name": "Antibiotic A",
+      "description": "Broad spectrum antibiotic",
+      "measure": "mg"
+    },
+    {
+      "id": "2",
+      "name": "Vitamin D",
+      "description": "Vitamin supplement",
+      "measure": "ml"
+    }
+  ],
+  "animalmedicaments": [
+    {
+      "id": "1",
+      "animalId": 1,
+      "medicamentId": 1,
+      "amount": 500
+    },
+    {
+      "id": "2",
+      "animalId": 2,
+      "medicamentId": 2,
+      "amount": 10
+    }
+  ],
+  "inventory": [
+    {
+      "id": "1",
+      "farmId": 1,
+      "name": "Main Barn Inventory"
+    },
+    {
+      "id": "2",
+      "farmId": 2,
+      "name": "Feed Storage"
+    }
+  ],
+  "items": [
+    {
+      "id": "1",
+      "name": "Hay Bale"
+    },
+    {
+      "id": "2",
+      "name": "Shovel"
+    },
+    {
+      "id": "3",
+      "name": "Chicken Feed"
+    },
+    {
+      "id": "4",
+      "name": "Water Bucket"
+    },
+    {
+      "id": "5",
+      "name": "Wheelbarrow"
+    }
+  ],
+  "orders": [
+    {
+      "id": "1",
+      "userId": 1,
+      "orderDate": "2024-05-01T09:00:00Z"
+    },
+    {
+      "id": "2",
+      "userId": 2,
+      "orderDate": "2024-05-15T11:30:00Z"
+    }
+  ],
+  "orderitems": [
+    {
+      "id": "1",
+      "orderId": 1,
+      "itemId": 1,
+      "quantity": 10
+    },
+    {
+      "id": "2",
+      "orderId": 1,
+      "itemId": 2,
+      "quantity": 2
+    },
+    {
+      "id": "3",
+      "orderId": 2,
+      "itemId": 3,
+      "quantity": 5
+    },
+    {
+      "id": "4",
+      "orderId": 2,
+      "itemId": 4,
+      "quantity": 1
+    },
+    {
+      "id": "5",
+      "orderId": 2,
+      "itemId": 5,
+      "quantity": 3
+    }
+  ],
+  "inventoryitems": [
+    {
+      "id": "1",
+      "inventoryId": 1,
+      "itemId": 1,
+      "quantity": 20
+    },
+    {
+      "id": "2",
+      "inventoryId": 1,
+      "itemId": 2,
+      "quantity": 3
+    },
+    {
+      "id": "3",
+      "inventoryId": 2,
+      "itemId": 3,
+      "quantity": 15
+    },
+    {
+      "id": "4",
+      "inventoryId": 2,
+      "itemId": 4,
+      "quantity": 2
+    },
+    {
+      "id": "5",
+      "inventoryId": 2,
+      "itemId": 5,
+      "quantity": 1
+    }
+  ],
+  "reminders": [
+    {
+      "id": "1",
+      "farmId": 1,
+      "name": "Vaccinate cows",
+      "dueDate": "2024-06-01T10:00:00Z",
+      "assignedWorkerId": 2,
+      "linkedAnimalId": 1
+    }
+  ],
+  "reports": [
+    {
+      "id": "1",
+      "userId": 1,
+      "reportType": "",
+      "name": "Monthly Animal Health",
+      "startDate": "2024-05-01T00:00:00Z",
+      "endDate": "2024-05-31T23:59:59Z",
+      "generatedDate": "2024-06-01T12:00:00Z",
+      "contents": "{\"summary\":\"All animals healthy.\"}"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "farmId": 1,
+      "name": "Clean Barn",
+      "assignedWorkerId": 2,
+      "status": "planned",
+      "dueDate": "2024-06-05T08:00:00Z",
+      "priority": "medium",
+      "description": "Clean the main barn before new animals arrive."
+    }
   ]
 }

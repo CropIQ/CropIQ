@@ -1,5 +1,5 @@
 "use client";
-import { createTheme, darken, lighten } from '@mui/material/styles';
+import { createTheme, darken, extendTheme, lighten } from '@mui/material/styles';
 import { Roboto } from 'next/font/google';
 
 // import type { Palette, PaletteOptions } from '@mui/material/styles';
@@ -20,8 +20,6 @@ declare module '@mui/material/styles' {
     notFound?: PaletteOptions['primary']
   }
 }
-
-
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],

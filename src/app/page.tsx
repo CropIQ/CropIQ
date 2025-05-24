@@ -1,36 +1,15 @@
-import Typography from "@mui/material/Typography";
+"use client";
+import HelloUser from "@/components/HelloUser/HelloUser";
+import { useUserInfo } from "@/hooks/useUserInfo"; // import the hook
 
 export default function Home() {
+    const { user, loading } = useUserInfo();
+
+    if (loading) return <div>Loading...</div>;
+
     return (
         <>
-            <Typography variant="h1" component="h1" gutterBottom color="text.primary">
-                Hello, world!
-            </Typography>
-            <Typography variant="h1" component="h1" gutterBottom color="text.primary">
-                Hello, world!
-            </Typography>
-            <Typography variant="h1" component="h1" gutterBottom color="text.primary">
-                Hello, world!
-            </Typography>
-            <Typography variant="h1" component="h1" gutterBottom color="text.primary">
-                Hello, world!
-            </Typography>
-            <Typography variant="h1" component="h1" gutterBottom color="text.primary">
-                Hello, world!
-            </Typography>
-            <Typography variant="h1" component="h1" gutterBottom color="text.primary">
-                Hello, world!
-            </Typography>
-            <Typography variant="h1" component="h1" gutterBottom color="text.primary">
-                Hello, world!
-            </Typography>
-            <Typography variant="h1" component="h1" gutterBottom color="text.primary">
-                Hello, world!
-            </Typography>
-            <Typography variant="h1" component="h1" gutterBottom color="text.primary">
-                Hello, world!
-            </Typography>
+            <HelloUser user={user} />
         </>
-        
     );
 }
