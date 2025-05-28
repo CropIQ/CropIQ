@@ -1,70 +1,94 @@
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-// Adjust these keys to match your app's localStorage usage
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 const USER_INFO_KEY = "userInfo";
 const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
 
-async function fetchUserInfo(accessToken: string): Promise<any> {
-  const response = await fetch("/user", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  if (!response.ok) throw new Error("AccessTokenExpired");
-  return response.json();
-}
-
-async function refreshAccessToken(refreshToken: string): Promise<string> {
-  const response = await fetch("/auth/refresh", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refreshToken }),
-  });
-  if (!response.ok) throw new Error("RefreshFailed");
-  const data = await response.json();
-  localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken);
-  return data.accessToken;
-}
-
 export function useUserInfo() {
+  const router = useRouter();
   const [user, setUser] = useState<any | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean | null>(null);
 
   useEffect(() => {
     const loadUser = async () => {
-      const cached = localStorage.getItem(USER_INFO_KEY);
-      if (cached) {
-        setUser(JSON.parse(cached));
-        setLoading(false);
-        return;
-      }
-
+      console.log("Loading user info...");
+      setLoading(true);
       let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-      const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-      if (!accessToken || !refreshToken) {
+      console.debug("Access Token:", accessToken);
+      if (!accessToken) {
         setLoading(false);
+        setUser(null);
+        router.replace("/login");
         return;
       }
 
-      try {
-        let userInfo;
-        try {
-          userInfo = await fetchUserInfo(accessToken);
-        } catch (err) {
-          if ((err as Error).message === "AccessTokenExpired") {
-            accessToken = await refreshAccessToken(refreshToken);
-            userInfo = await fetchUserInfo(accessToken);
-          } else {
-            throw err;
-          }
-        }
-        setUser(userInfo);
-        localStorage.setItem(USER_INFO_KEY, JSON.stringify(userInfo));
-      } catch {
+      const splitedToken = accessToken.split(".");
+      console.debug("Splitted Token:", splitedToken);
+      if (splitedToken.length !== 3) {
+        setLoading(false);
         setUser(null);
+        router.replace("/login");
+        return;
       }
-      setLoading(false);
+      
+      const payload = JSON.parse(atob(splitedToken[1]));
+      console.debug("Payload:", payload);
+      const exp = payload.exp * 1000;
+      const now = Date.now();// + 10800000; // 3 hours in milliseconds
+      console.debug("Current Time:", new Date(now).toISOString());
+      console.debug("Expiration Time:", new Date(exp).toISOString());
+      if (now < exp) {
+        setUser(payload);
+        setLoading(false);
+        localStorage.setItem(USER_INFO_KEY, JSON.stringify(payload));
+        console.debug("User info loaded:", payload);
+        return;
+      }
+      if (now >= exp) {
+        const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+        console.debug("Refresh Token:", refreshToken);
+        if (!refreshToken) {
+          setLoading(false);
+          setUser(null);
+          router.replace("/login");
+          return;
+        }
+        try {
+          const res = await fetch("/api/auth/refresh", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refreshToken }),
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            setUser(null);
+            setLoading(false);
+            router.replace("/login");
+            return;
+          } else {
+            if (data.user) {
+              console.debug("User refreshed:", data.user);
+              localStorage.setItem("userInfo", data.user);
+            }
+            if (data.accessToken) {
+              localStorage.setItem("accessToken", data.accessToken);
+            }
+            if (data.refreshToken) {
+              localStorage.setItem("refreshToken", data.refreshToken);
+            }
+          }
+        } catch {
+          setUser(null);
+          setLoading(false);
+          router.replace("/login");
+          return;
+        }
+      }
+      setUser(null);
+
     };
 
     loadUser();

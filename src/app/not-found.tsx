@@ -4,15 +4,11 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 
-export default async function NotFound() {
+async function NotFound() {
   return (
     <Box
       sx={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        height: "100vh",
+        height: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -66,3 +62,5 @@ export default async function NotFound() {
     </Box>
   );
 }
+
+export default NotFound;

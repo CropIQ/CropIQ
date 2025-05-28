@@ -84,8 +84,8 @@ export default function Header() {
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleCloseMenu}>
-                <Link href="/new-order" component={NextLink} sx={{ textDecoration: 'none', color: 'inherit' }}>
-                  New Order
+                <Link href="/new-task" component={NextLink} sx={{ textDecoration: 'none', color: 'inherit' }}>
+                  New Task
                 </Link>
               </MenuItem>
             </Menu>

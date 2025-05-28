@@ -6,6 +6,8 @@ import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import type { Metadata } from "next";
+import Box from "@mui/material/Box";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
     title: "CropIQ",
@@ -24,8 +26,16 @@ export default function RootLayout({
             <AppRouterCacheProvider options={{ enableCssLayer: true }}>
                 <ThemeProvider theme={theme}>
                     <CssBaseline/>
-                    <Header/>
-                    {children}
+                    <AuthProvider>
+                        <Box suppressHydrationWarning sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '100vh',
+                        }}>
+                            <Header/>
+                            {children}
+                        </Box>
+                    </AuthProvider>
                 </ThemeProvider>
             </AppRouterCacheProvider>
         </body>
