@@ -1,5 +1,6 @@
 'use client';
 
+import { Box, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { 
   createContext, 
@@ -75,6 +76,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
+      const now = Date.now();
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp * 1000;
+
+      if (now >= exp) {
+        await refresh();
+      }
+
       setUser(() => JSON.parse(atob(token.split('.')[1])));
       setIsAuthenticated(true);
     } catch (error) {
@@ -87,7 +96,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const removeTokens = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userInfo');
   }
 
   const login = async (email: string, password: string) => {
@@ -105,7 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (!response.ok) {
-      throw new Error('Email or password is incorrect');
+        throw new Error('Email or password is incorrect');
       }
 
       const data = await response.json();
@@ -188,6 +196,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/login');
   };
 
+  const refresh = async (): Promise<boolean> => {
+    console.debug('Refreshing token...');
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) {
+        router.push('/login');
+        throw new Error('No refresh token found. Please log in again.');
+      }
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/refreshToken`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to refresh token');
+      }
+
+      const data = await response.json();
+      
+      if (data.accessToken) {
+        localStorage.setItem('accessToken', data.accessToken);
+      } else {
+        throw new Error('No access token received');
+      }
+
+      await updateUserData();
+      return true;
+    } catch (error) {
+      handleApiError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     updateUserData();
   }, [updateUserData]);
@@ -217,16 +267,21 @@ export function withAuth<P extends object>(
   Component: React.ComponentType<P>
 ): React.FC<P> {
   return function WrappedComponent(props: P) {
-    const { isAuthenticated, loading } = useAuth();
+    const { isAuthenticated, loading, updateUserData } = useAuth();
 
     useEffect(() => {
+      updateUserData();
       if (!loading && !isAuthenticated) {
         window.location.href = '/login';
       }
     }, [loading, isAuthenticated]);
 
     if (loading) {
-      return <div>Loading...</div>;
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <Typography variant="h6">Loading...</Typography>
+        </Box>
+      );
     }
 
     if (!isAuthenticated) {
